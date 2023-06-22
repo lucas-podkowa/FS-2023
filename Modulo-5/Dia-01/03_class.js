@@ -9,8 +9,8 @@ class Animal {
 
     //inicializacion
     constructor(nombre, color, tipo) {
-        this.color = color;
         this.nombre = nombre;
+        this.color = color;
         this.tipo = tipo;
     }
 
@@ -23,8 +23,8 @@ class Animal {
 
 
 //instanciacion de clase a objetos
-var animal1 = new Animal('Pelusa', 'Blanco', 'gato');
-var animal2 = new Animal('Aaron', 'Gris', 'perro');
+var animal1 = new Animal('Pelusa', 'Blanco');
+var animal2 = new Animal('Aaron', 'perro');
 
 
 //invocacion de metodos.
@@ -33,23 +33,3 @@ animal2.presentarme();
 
 console.log(animal1.color);
 
-
-
-
-
-var jsona = {
-    "nombre": "Pelusa",
-    "color": "blanco",
-    "tipo": "gato",
-    "presentarme": function () {
-        //console.log("Hola, soy un: " + this.tipo + ", me llaman: " + this.nombre + "y soy de color: " + this.color);
-    }
-}
-var jsonb = {
-    "nombre": "Aaron",
-    "color": "gris",
-    "tipo": "perro",
-    "presentarme": function () {
-        //console.log("Hola, soy un: " + this.tipo + ", me llaman: " + this.nombre + "y soy de color: " + this.color);
-    }
-}

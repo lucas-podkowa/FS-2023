@@ -7,15 +7,18 @@ var alTerminar = function (err, data) {
     return;
   }
   console.log(data);
+  console.log('para este punto del tiempo deberia haber mostrado el contenido del archivo')
 }
 
-fs.readFile(__dirname + '/texto3.txt', 'utf8', alTerminar);
+fs.readFile(__dirname + '/texto2.txt', 'utf8', alTerminar);
 
-console.log("Fin del programa");
 
-// setTimeout(() => {
-//   console.log("Fin del programa");
-// }, 1000);
+
+setTimeout(() => {
+  console.log("Fin del programa");
+}, 1000);
+
+
 
 
 

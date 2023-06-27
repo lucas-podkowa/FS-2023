@@ -25,7 +25,7 @@ control_remoto.on('saludar',function(){
 
 // el robot saluda
 control_remoto.on('saludar',function(){
-    console.log('El robot dice "Hola, soy Genialo"!');
+    console.log('El robot dice "Hola, soy Lucas"!');
 });
 
 
@@ -34,4 +34,6 @@ control_remoto.on('saludar',function(){
 // utilizar controles
 control_remoto.emit('adelante');
 control_remoto.emit('atras');
+control_remoto.emit('saludar');
+control_remoto.emit('saludar');
 control_remoto.emit('saludar');

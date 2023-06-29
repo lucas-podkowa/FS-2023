@@ -2,7 +2,9 @@
 var fs = require('fs');
 
 
-fs.unlink(__dirname + '/texto3.txt', (err) => {
+fs.unlink(__dirname + '/borrar.js', (err) => {
   if (err) throw err;
-  console.log('path/file.txt was deleted');
+  console.log('te borré');
 });
+
+console.log('fin es mas rapoido aunque no lo parezca');

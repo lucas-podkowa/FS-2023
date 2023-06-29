@@ -1,16 +1,16 @@
 //llamado async
 var fs = require('fs');
 
-var alTerminar = function (err, data) {
+
+fs.readFile(__dirname + '/texto2.txt', 'utf8', (err, contenido)=>{
   if (err) {
     console.error(err);
     return;
   }
-  console.log(data);
+  console.log(contenido);
   console.log('para este punto del tiempo deberia haber mostrado el contenido del archivo')
-}
 
-fs.readFile(__dirname + '/texto2.txt', 'utf8', alTerminar);
+});
 
 
 

@@ -69,8 +69,7 @@ app.put('/api/persona', function (req, res) {
 
 //C: CREATE
 //R: READ
-//U: UPDATE
-//D: DELETE 
+//U:  
 
 //eliminamos persona
 app.delete('/api/persona/:dni', function (req, res) {

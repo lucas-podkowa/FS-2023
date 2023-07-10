@@ -9,17 +9,17 @@ app.use(morgan('tiny'));
 morgan(':method :url :status :res[content-length] - :response-time ms');
 
 //imprimimos en consola todo lo que sucede
-app.use(function (req, res, next) {
-    var data = {
-        "httpVersion": req.httpVersion,
-        "headers": req.headers,
-        "url": req.url,
-        "method": req.method,
-        "query": req.query
-    };
-    console.log(JSON.stringify(data));
-    next();
-});
+// app.use(function (req, res, next) {
+//     var data = {
+//         "httpVersion": req.httpVersion,
+//         "headers": req.headers,
+//         "url": req.url,
+//         "method": req.method,
+//         "query": req.query
+//     };
+//     console.log(JSON.stringify(data));
+//     next();
+// });
 
 var personas = [];
 
@@ -35,6 +35,7 @@ app.post('/api/persona', function (req, res) {
         "apellido": req.body.apellido,
         "dni": req.body.dni,
     };
+    //personas es mi array de personas, la BD
     for (var index in personas) {
         var personaExistente = personas[index];
         if (persona.dni == personaExistente.dni) {
@@ -55,11 +56,21 @@ app.put('/api/persona', function (req, res) {
         if (persona.dni == dni) {
             persona.nombre = req.body.nombre;
             persona.apellido = req.body.apellido;
+
+            res.send(`Se modificó la persona ${persona.nombre} ${persona.apellido} ${req.body.dni}`);
+            return;
         }
     }
 
-    res.send(`Se modificó la persona ${req.body.nombre} ${req.body.apellido} ${req.body.dni}`);
+    res.send(`La persona con dni  ${req.body.dni} no existe`);
+
+    
 });
+
+//C: CREATE
+//R: READ
+//U: UPDATE
+//D: DELETE 
 
 //eliminamos persona
 app.delete('/api/persona/:dni', function (req, res) {

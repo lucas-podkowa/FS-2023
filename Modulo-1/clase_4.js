@@ -187,8 +187,9 @@ var mate = {
         return respuesta;
     }
 
-    
+
 }
+
 //mate.presentacion()
 
 //document.write(mate.tienes_el_color("verde"));

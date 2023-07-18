@@ -8,18 +8,18 @@ app.use(morgan('tiny'));
 
 morgan(':method :url :status :res[content-length] - :response-time ms');
 
-//imprimimos en consola todo lo que sucede
-// app.use(function (req, res, next) {
-//     var data = {
-//         "httpVersion": req.httpVersion,
-//         "headers": req.headers,
-//         "url": req.url,
-//         "method": req.method,
-//         "query": req.query
-//     };
-//     console.log(JSON.stringify(data));
-//     next();
-// });
+//imprimimos en consola la cabecera recibida en el req
+app.use(function (req, res, next) {
+    var data = {
+        "httpVersion": req.httpVersion,
+        "headers": req.headers,
+        "url": req.url,
+        "method": req.method,
+        "query": req.query
+    };
+    console.log(JSON.stringify(data));
+    next();
+});
 
 var personas = [];
 
@@ -66,10 +66,6 @@ app.put('/api/persona', function (req, res) {
 
     
 });
-
-//C: CREATE
-//R: READ
-//U:  
 
 //eliminamos persona
 app.delete('/api/persona/:dni', function (req, res) {

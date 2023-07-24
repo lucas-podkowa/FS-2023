@@ -1,0 +1,11 @@
+{
+    "database": {
+        "host": "localhost",
+        "user": "root",
+        "password": "admin",
+        "database": "silicon"
+    },
+    "server": {
+        "port": 8080
+    }
+}

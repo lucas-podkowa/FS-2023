@@ -1,81 +1,66 @@
-//declaraciones y configuraciones iniciales
+require('rootpath')();
 const express = require('express');
-const mysql = require('mysql');
 const morgan = require('morgan');
 const app = express();
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan('tiny'));
 morgan(':method :url :status :res[content-length] - :response-time ms');
 
-
-//fin de declaraciones
-
-
-//conectarnos a la BD
-var connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: 'admin',
-    database: 'silicon'
-});
-
-connection.connect((err) => {
-    if (err) {
-        console.log(err);
-    } else {
-        console.log("base de datos conectada");
-    }
-});
-
-//fin conexion
-
-
-//codigo fuente
-
-app.get('/api/persona', (req, res) => {
-
-    $query = 'SELECT * FROM persona';
-
-    connection.query($query, function (err, rows) {
-        if (err) {
-            res.send(err);
-            return;
-        }
-        res.send(rows);
-    });
-
-    //res.send("listar")
-});
-
-/*
-         {
-                    mensaje : "error del servidor",
-                    detalle: err 
-                }
-*/
+const configuracion = require("config.json");
+var personaDb = require("personaBD.js");
 
 //req : es lo que llega desde el frontend (en nuestro caso Postman)
-//res : lo que le evio desde el servidor al frontend
-app.post('/api/persona', (req, res) => {
+//res : respuesta enviada desde el servidor al frontend
 
-    parametros = [req.body.dni, req.body.nombre, req.body.apellido]
-    $query = 'INSERT INTO persona (dni, nombre, apellido) VALUES (?,?,?)';
+//atendiendo el endpoint /api/persona mediante el metodo GET 
+// |--> llamar a la funcion getAll() que está en el archivo encargado de hestionar lo relacionado a la tabla PERSONA en la BD
+//      y procesara la respuesta en una funcion callback
+// |--> GetAll() enviara como respuesta un error (que le enviará la base de datos) o los datos en caso de exito   
 
-    connection.query($query, parametros, function (err, rows) {
+
+app.get("/api/persona", (req, res) => {
+
+    //    var resultado = personaDb.getAll();
+    //     if (resultado.isError) {
+    //         res.status(500).send(err);
+    //     } else {
+    //         res.json(resultado);
+    //     }
+
+
+    personaDb.getAll((err, resultado) => {
         if (err) {
-            res.status(500).send({
-                mensaje: "error del servidor",
-                detalle: err
-            });
-            return;
+            res.status(500).send(err);
         } else {
-            res.send("se creo la persona" + req.body.nombre + req.body.apellido);
+            res.json(resultado);
         }
     });
 
 });
+
+
+//---------------------------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------------------------------
+
+
+app.post('/api/persona', (req, res) => {
+
+    let persona = req.body;
+    personaDb.create(persona, (err, resultado) => {
+        if (err) {
+            res.status(500).send(err);
+        } else {
+            res.send(rows);
+        }
+    });
+
+});
+
+
+//---------------------------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------------------------------
+
 
 app.put('/api/persona/:dni', (req, res) => {
     parametros = [req.body.dni, req.body.nombre, req.body.apellido, req.params.dni]
@@ -83,12 +68,16 @@ app.put('/api/persona/:dni', (req, res) => {
 
     connection.query($query, parametros, function (err, rows) {
         if (err) {
-            res.status(500).send(err);
+            res.status(500).send({
+                mensaje: "mensajito pa que lo veas fulano del frontend",
+                detail: err
+            });
             return;
         } else {
             if (rows.affectedRows == 0) {
                 res.status(404).send({
                     message: "no se encontró la persona " + req.params.dni,
+                    detail: rows
                 });
             } else {
                 res.send({
@@ -101,18 +90,22 @@ app.put('/api/persona/:dni', (req, res) => {
 
 });
 
+
+//---------------------------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------------------------------
+
 app.delete('/api/persona/:dni', (req, res) => {
-    parametros = [req.params.dni]
     $query = 'DELETE FROM persona WHERE dni = ?';
 
-    connection.query($query, parametros,  function (err, rows) {
+    connection.query($query, req.params.dni, function (err, rows) {
         if (err) {
             res.status(500).send(err);
             return;
         } else {
             if (rows.affectedRows == 0) {
                 res.status(404).send({
-                   message: "no se encontró la persona " + req.params.dni,
+                    message: "no se encontró la persona " + req.params.dni,
+                    detail: rows
                 });
             } else {
                 res.send({
@@ -126,13 +119,14 @@ app.delete('/api/persona/:dni', (req, res) => {
 });
 
 
-//fin codigo
+//---------------------------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------------------------------
 
 
-app.listen(8080, (err) => {
+app.listen(configuracion.server.port, (err) => {
     if (err) {
         console.log(err);
     } else {
-        console.log("sevidor escuchando en el puerto 8080");
+        console.log("sevidor escuchando en el puerto " + configuracion.server.port);
     }
 });

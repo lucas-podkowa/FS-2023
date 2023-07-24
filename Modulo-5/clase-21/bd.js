@@ -20,16 +20,8 @@ connection.connect(function (err) {
 });
 
 //-----------------------------------------------------------------
-// $query = 'SELECT * from medico';
 
-// connection.query($query, function(err, rows) {
-//    if(err){
-//        console.log("ha ocurrido el siguiente error:" + err);
-//        return;
-//    }
-//    console.log("Consulta ejecutada con éxito:", rows);
-// });
-
+//app.METODO(PATH, Function);
 var id = 999;
 connection.query('DELETE from medico WHERE matricula=?', id,  function (err, rows) {
    if (err) {

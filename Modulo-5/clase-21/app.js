@@ -17,6 +17,7 @@ app.get('/', function (req, res) {
 });
 
 //listamos personas
+//getAll()
 app.get('/api/persona', function (req, res) {
     
     var personas = fs.readFileSync(__dirname + '/personas.json');
@@ -151,9 +152,62 @@ app.listen(8080, () => {
     console.debug('App escuchando puerto :8080');
 });
 
-//var personas = fs.readFileSync(__dirname + '/personas.json');
 
-// var personasString = fs.readFileSync(__dirname + '/personas.json');
-// var personas = JSON.parse(personasString);
 
-//fs.writeFileSync(__dirname+'/personas.json', JSON.stringify(personas));
+
+
+
+
+/*
+//montar un servidor
+
+
+//1
+configuracion de modulos y/o paquetes a utilizar, declaracion de variables o constantes globales
+podria incluir la necesidad de instalar coasas (NPM install #nombre_modulo)
+app --> express()
+
+
+
+//2
+para atender los pedidos recibidos desde el frontend debemos configurar o programar los ENDPOINTS (rutas a las cuales debo dar serviccio)
+()=>{}
+
+app.METODOS("PATH o rutas", funcionCallBack);
+dentro de la funcion callback damos inteligencia al sistema, funcionalidad
+damos una respuesta... recibimos una peticion (req) y devolvemos una respuesta (res)
+
+
+
+
+//3
+activar el servidor, levantarlo, dejarlo a la escucha
+
+
+
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

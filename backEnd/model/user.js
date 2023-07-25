@@ -1,4 +1,6 @@
-var persona_db = {};
+require('rootpath')();
+
+var usuario_db = {};
 
 const { query } = require('express');
 const mysql = require('mysql');
@@ -30,8 +32,8 @@ connection.connect((err) => {
 
 
 
-persona_db.getAll = function (funCallback) {
-    var consulta = 'SELECT * FROM persona';
+usuario_db.getAll = function (funCallback) {
+    var consulta = 'SELECT * FROM user';
     connection.query(consulta, function (err, rows) {
         if (err) {
             funCallback(err);
@@ -44,16 +46,16 @@ persona_db.getAll = function (funCallback) {
 
 
 
-persona_db.create = function (persona, funcallback) {
-    consulta = "INSERT INTO persona (dni, nombre, apellido) VALUES (?,?,?);";
-    params = [persona.apellido, persona.dni, persona.nombre];
+usuario_db.create = function (usuario, funcallback) {
+    consulta = "INSERT INTO user (email, nickname, clave) VALUES (?,?,?);";
+    params = [usuario.email, usuario.nickname, usuario.clave];
 
     connection.query(consulta, params, (err, detail_bd) => {
         if (err) {
 
             if (err.code == "ER_DUP_ENTRY") {
                 funcallback({
-                    mensajito: "La persona ya fue registrada",
+                    mensajito: "el usuario ya fue registrada",
                     detalle: err
                 });
             } else {
@@ -65,7 +67,7 @@ persona_db.create = function (persona, funcallback) {
         } else {
 
             funcallback(undefined, {
-                mensajito: "se creo la persona " + persona.nombre + persona.apellido,
+                mensajito: "se creo la el usaurio " + usuario.nickname,
                 detalle: detail_bd
             });
         }
@@ -74,4 +76,4 @@ persona_db.create = function (persona, funcallback) {
 
 
 
-module.exports = persona_db;
+module.exports = usuario_db;

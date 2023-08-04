@@ -75,5 +75,20 @@ usuario_db.create = function (usuario, funcallback) {
 }
 
 
+// el id de persona persona es dni
+// el id de usuario es email
+// lo que necesito es el nikname de usuario a partir de una persona
+
+
+
+
+/*
+if (result_model.detail.affectedRows == 0) {
+                res.status(404).send(result_model.message);
+            } else {
+                res.send(result_model.message);
+            }
+*/
+
 
 module.exports = usuario_db;

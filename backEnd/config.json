@@ -3,7 +3,7 @@
         "host": "localhost",
         "user": "root",
         "password": "admin",
-        "database": "silicon"
+        "database": "backend"
     },
     "server": {
         "port": 8080

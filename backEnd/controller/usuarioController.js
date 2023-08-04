@@ -15,8 +15,12 @@ var usuarioDb = require("model/user.js");
 // |--> GetAll() enviara como respuesta un error (que le enviará la base de datos) o los datos en caso de exito   
 
 
-app.get('/', (req, res) => {
+app.getAll('/', getAll);
+app.post('/', createUser);
 
+
+
+function getAll (req, res) {
     usuarioDb.getAll((err, resultado) => {
         if (err) {
             res.status(500).send(err);
@@ -24,16 +28,9 @@ app.get('/', (req, res) => {
             res.json(resultado);
         }
     });
+}
 
-});
-
-
-//---------------------------------------------------------------------------------------------------------------------
-//---------------------------------------------------------------------------------------------------------------------
-
-
-app.post('/', (req, res) => {
-
+function createUser(req, res) {
     let usuario = req.body;
     usuarioDb.create(usuario, (err, resultado) => {
         if (err) {
@@ -42,22 +39,9 @@ app.post('/', (req, res) => {
             res.send(resultado);
         }
     });
-
-});
+}
 
 module.exports = app;
 
-
-lucas, pod, mail
-lucre, mencia, mail
-brenda, staudt, mail
-marco, mail
-
-var uno = {
-
-    "nombre": "",
-    "apellido": null,
-    "mail": ""
-};
 
 

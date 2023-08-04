@@ -8,18 +8,13 @@ app.use(morgan('tiny'));
 morgan(':method :url :status :res[content-length] - :response-time ms');
 
 const configuracion = require("config.json");
-
-
 const controladorPersona = require("controller/personaController.js");
- const controladorUsuario = require("controller/usuarioController.js");
-// const controladorArticulo = require("controller/articuloController.js");
+const controladorUsuario = require("controller/usuarioController.js");
+
 
 app.use('/api/persona', controladorPersona);
- app.use('/api/usuario', controladorUsuario);
-// app.use('/articulos', controladorArticulo);
+app.use('/api/usuario', controladorUsuario);
 
-//aplicacion --> cuando se ejecuta el use hace dos cosas
-//(todo lo que entre aca, enviamelo aca)
 
 app.listen(configuracion.server.port, (err) => {
     if (err) {

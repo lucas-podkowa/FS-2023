@@ -1,0 +1,79 @@
+body {
+    font-size: 32px;
+    background-color: rgb(68, 70, 71);
+
+}
+
+#div2 {
+    font-size: 30px;
+}
+/*
+div {
+    background-color: rgb(79, 234, 162);
+}
+*/
+
+span {
+    background-color: green;
+    color: antiquewhite;
+}
+
+#padre_div {
+    background-color: grey;
+    width: 75%;
+}
+#hijo_div {
+    background-color: coral;
+    width: 50%;
+    font-weight: 400;
+    margin-top: 25px;
+    margin-left: 50px;
+    padding-left: 3px;
+    border: 1px solid black;
+}
+
+
+#p1 {
+    border-style: solid;
+    border-color: black;
+    border-width: 2.25em;
+    border-radius: 20px;
+}
+
+#p2 {
+    border: 10px solid rgb(66, 90, 148);
+    border-radius: 30px;
+    background-color: brown;
+    font-size: small;
+    color: white;
+    padding: 20px;
+    width: 50%;
+    margin: auto;
+    font-weight: 700;
+   font-family: Borel;
+
+
+    /*box-shadow: 15px 15px 30px white;*/
+}
+
+#p2:hover {
+    border: 10px solid rgb(66, 90, 148);
+    border-radius: 30px;
+    background-color: brown;
+    color: white;
+    padding: 20px;
+    box-shadow: 15px 15px 30px white;
+}
+
+#t1 {
+    color: white;
+}
+
+table, th, tr {
+    border: 1px solid white;
+}
+
+tr:hover {
+    background-color: lightblue;
+    box-shadow: 5px 5px 10px yellow;
+}

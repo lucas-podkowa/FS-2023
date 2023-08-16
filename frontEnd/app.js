@@ -8,8 +8,8 @@ app.use('/', express.static('public'))
 
 app.post("/crearPersona", (req, res) => {
     const data = req.body;
-    const values = Object.values(data);
-    console.log(values);
+    //const values = Object.values(data);
+    console.log(data);
 });
 
 

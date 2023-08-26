@@ -1,0 +1,47 @@
+#box {
+    border-width: 10px;
+    border-style: solid;
+    border-color: brown;
+    background-color: darkgrey;
+    padding: 30px;
+    margin: 20px 0px;
+    font-size: 32px;
+    border-radius: 1cm;
+}
+
+body {
+    background-color: aliceblue;
+    font-family: "Sofia", sans-serif;
+
+}
+
+#divsize {
+    height: 200px;
+    width: 50%;
+    background-color: rgb(179, 240, 202);
+    padding-left: 30px;
+    margin: auto;
+
+    
+    font-size: 2rem;
+    text-shadow: 4px 4px 10px rgba(0,0,0,0.47);  /* Horizontal Length  Horizontal | Shadow Length | Radius Blur | Color*/
+    
+    border-radius: 50px 0px 74px 0px;
+    border: 18px solid #220a09;
+    box-shadow: -8px 10px 21px -2px rgba(212,198,99,0.75);
+}
+#divsize:hover {
+    height: 200px;
+    width: 50%;
+    background-color: rgb(142, 247, 116);
+    padding-left: 30px;
+    margin: auto;
+
+    
+    font-size: 3rem;
+    text-shadow: 4px 4px 10px rgba(0,0,0,0.47);  /* Horizontal Length  Horizontal | Shadow Length | Radius Blur | Color*/
+    
+    border-radius: 50px 0px 74px 0px;
+    border: 18px solid #220a09;
+    box-shadow: -8px 10px 21px -2px rgba(212,198,99,0.75);
+}

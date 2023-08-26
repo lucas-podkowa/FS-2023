@@ -4,9 +4,11 @@ body {
 
 }
 
+
 #div2 {
     font-size: 30px;
 }
+
 /*
 div {
     background-color: rgb(79, 234, 162);
@@ -22,15 +24,21 @@ span {
     background-color: grey;
     width: 75%;
 }
+
 #hijo_div {
     background-color: coral;
-    width: 50%;
+    max-width: 500px;
     font-weight: 400;
     margin-top: 25px;
     margin-left: 50px;
     padding-left: 3px;
     border: 1px solid black;
+    padding: 1rem 0;
+    text-shadow: 5px 10px 0.3rem white;
+
 }
+
+
 
 
 #p1 {
@@ -50,7 +58,7 @@ span {
     width: 50%;
     margin: auto;
     font-weight: 700;
-   font-family: Borel;
+    font-family: Borel;
 
 
     /*box-shadow: 15px 15px 30px white;*/
@@ -67,13 +75,54 @@ span {
 
 #t1 {
     color: white;
+    margin-top: 2rem;
+    width: 100%;
+    border-collapse: collapse;
+    
+    
 }
 
-table, th, tr {
+th,
+td {
     border: 1px solid white;
 }
 
-tr:hover {
-    background-color: lightblue;
-    box-shadow: 5px 5px 10px yellow;
+table tr:hover {
+    cursor: pointer;
+    background-color: #ccc;
+    color: #333;
+}
+
+
+section div {
+    background-color: aliceblue;
+    margin: 1rem;
+}
+
+#caja1{
+    background-color: yellow;
+    position: sticky;
+    top: 0;
+}
+
+#caja2{
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    width: 300px;
+    border: 3px solid #73AD21;
+  
+}
+
+#art1 {
+    height: 500px;
+    width: 400px;
+    margin: auto;
+    border: 1px solid white;
+
+    background-image: url("./images/chanchito.jpg");
+    background-size: contain;
+    background-attachment: fixed;
+
+
 }

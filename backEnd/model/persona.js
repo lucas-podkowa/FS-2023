@@ -1,12 +1,14 @@
+//configuraciones iniciales
 require('rootpath')();
 
-var persona_db = {};
+/*
+se inicializan las constantes para tener acceso a la funcionalidad de mysql asi como el archivo config donde se encuentran los datos de conexion
+*/
 
-const { query } = require('express');
 const mysql = require('mysql');
 const configuracion = require("config.json");
 
-
+//inicializa la conexion entre el servidor y la base de datos
 var connection = mysql.createConnection(configuracion.database);
 connection.connect((err) => {
     if (err) {
@@ -16,153 +18,180 @@ connection.connect((err) => {
     }
 });
 
+var persona_db = {};
+
+/*
+persona_db : es un objeto que sera invocado desde los endpoint del controlador. Aquí en el MODEL, dicho objeto posee las funcionalidades que permiten la interaccion con la base de datos como update, create, delete, etc. entonces del lado del controlador puedo invocar a persona_db.update(); o persona_db.create();
+
+funCallback: en una funcion que la enviamos desde el endpoint del controlador, es mediante esta funcion que le damos una respuesta desde el MODEL hacia el CONTROLLER, aquí lo que enviamos como error o detalles con mensajes, es lo que recibira personaController para seguir su proceso de respuesta hacia el forontend
+*/
 
 
-//-- antes -------------------------------------------------------------------
-//teniamos un solo archivo que era el index //codificaba todo en la misma funcion
+// C = CREATE
+// personaController --> app.post('/', create);
+persona_db.create = function (datos, funCallback) {
+    consulta = "INSERT INTO persona (dni, nombre, apellido) VALUES (?,?,?);";
+    params = [datos.dni, datos.nombre, datos.apellido];
 
+    connection.query(consulta, params, (err, rows) => {
+        if (err) {
+            if (err.code == "ER_DUP_ENTRY") {
+                funCallback({
+                    message: "La persona ya fue registrada anteriormente",
+                    detail: err
+                });
+            } else {
+                funCallback({
+                    message: "error diferente",
+                    detail: err
+                });
+            }
+        } else {
+            funCallback(undefined, {
+                message: `se creo la persona  ${persona.nombre} ${persona.apellido}`,
+                detail: rows
+            });
+        }
+    });
+}
 
-//-- ahora -------------------------------------------------------------------
-//tenemos 2 archivos que son el persona_index y la persona_BD
-//tengo que codificar en dos funciones y comunicarme entre ellas
-//persona_index (interaccion con el servidor): se encargara de mandarle los mensajes al frontend y de hacer peticiones a persona_BD  
-//persona_BD (interaccion con la base de datos): recibira peticiones de persona_index y debera devolver una respuesta
-//¿como me comunico?: una forma invocar(mandar una funcion [carretilla vacia]) ---> atender (recibir la funcion que me mandaron)
-//persona_BD are lo que tenga que hacer y enviare mis datos a la funcion que me enviaron [llenar la carretilla]
-
-
-
-
+//R = READ
+// personaController --> app.get('/', getAll);
 persona_db.getAll = function (funCallback) {
     var consulta = 'SELECT * FROM persona';
     connection.query(consulta, function (err, rows) {
         if (err) {
-            funCallback(err);
-            return;
+            funCallback({
+                message: "ha ocurrido un error inesperado al buscar la persona",
+                detail: err
+            });
         } else {
             funCallback(undefined, rows);
         }
     });
 }
 
+
+// U = UPDATE
+// personaController --> app.put('/', actualizar);
+persona_db.update = function (datos, id, funCallback) {
+    consulta = "UPDATE persona SET dni = ?, nombre = ?, apellido = ? WHERE dni = ?";
+    params = [datos.dni, datos.nombre, datos.apellido, id];
+
+    connection.query(consulta, params, (err, result) => {
+
+        if (err) {
+            if (err.code == "ER_DUP_ENTRY") { //dni duplicado
+                funCallback({
+                    message: "Los datos a insertar generan una persona duplicada",
+                    detail: err
+                });
+            } else { //algun otro codigo de error
+                funCallback({
+                    message: "error diferente, analizar codigo error",
+                    detail: err
+                });
+            }
+        } else if (result.affectedRows == 0) { //persona a actualizar no encontrada
+            funCallback({
+                message: "No existe persona que coincida con el criterio de busqueda",
+                detail: result
+            });
+        } else {
+            funcallback(undefined, {
+                message: `se modificó la persona  ${persona.nombre} ${persona.apellido}`,
+                detail: result
+            });
+        }
+    });
+}
+
+
+
+// D = DELETE
+// personaController --> app.post('/', borrar);
+persona_db.borrar = function (id, funCallback) {
+    consulta = "DELETE FROM persona WHERE dni = ?";
+    connection.query(consulta, id, (err, result) => {
+        if (err) {
+            funCallback({ menssage: err.code, detail: err });
+        } else {
+            if (result.affectedRows == 0) {
+                funCallback(undefined,
+                    {
+                        message: "no se encontro una persona con el dni ingresado",
+                        detail: result
+                    });
+            } else {
+                funCallback(undefined, { message: "persona eliminada", detail: result });
+            }
+        }
+    });
+}
+
+
+// personaController --> app.get('/:dni', getByDNI);
 persona_db.getByDNI = function (dni, funCallback) {
-    connection.query("select * from persona where dni = ?;", dni, (err, respuesta) => {
+    connection.query('SELECT * FROM persona WHERE dni = ?', dni, (err, result) => {
         if (err) {
             funCallback({
-                mensajito: "a ocurrido algun error inesperado al buscar la persona",
-                detalle: err
+                menssage: "a ocurrido algun error inesperado al buscar la persona",
+                detail: err
             });
-        } else if (respuesta.length == 0) { //consulta no impacta en nada dentro de la BD
+        } else if (result.length == 0) { //consulta no impacta en nada dentro de la BD
             funCallback(undefined, {
-                mensajito: `no se encontro la persona con el dni: ${dni}`,
-                detalle: respuesta
+                menssage: `no se encontro una persona con el DNI: ${dni}`,
+                detail: result
             });
-        }else {
-
-            funCallback(undefined, {
-                mensajito: `los datos de la persona con el dni ${dni} son:`,
-                detalle: detail_bd
-            });
-        }
-    });
-    
-}
-
-
-persona_db.create = function (persona, funcallback) {
-    consulta = "INSERT INTO persona (dni, nombre, apellido) VALUES (?,?,?);";
-    params = [persona.dni, persona.nombre, persona.apellido];
-
-    connection.query(consulta, params, (err, detail_bd) => {
-        if (err) {
-
-            if (err.code == "ER_DUP_ENTRY") {
-                funcallback({
-                    mensajito: "La persona ya fue registrada",
-                    detalle: err
-                });
-            } else {
-                funcallback({
-                    mensajito: "error diferente",
-                    detalle: err
-                });
-            }
         } else {
 
-            funcallback(undefined, {
-                mensajito: "se creo la persona " + persona.nombre + persona.apellido,
-                detalle: detail_bd
+            funCallback(undefined, {
+                menssage: `los datos de la persona con el dni ${dni} son:`,
+                detail: result
             });
         }
     });
-}
-
-
-persona_db.borrar = function (id_p_e, retorno) {
-    consulta = "DELETE FROM persona WHERE dni = ?";
-    parametro = id_p_e;
-
-    connection.query(consulta, parametro, (err, result) => {
-        if (err) {
-            retorno({ menssage: err.code, detail: err }, undefined);
-
-        } else {
-
-            if (result.affectedRows == 0) {
-                retorno(undefined, { message: "no se encontro la persona, ingrese otro DNI", detail: result });
-            } else {
-                retorno(undefined, { message: "persona eliminada", detail: result });
-            }
-        }
-    });
-
-    //borrara la persona y le comunicara al conrtrolador como salio la cosa
 
 }
 
 
-persona_db.getUserByPersona = function (dni, funcallback) {
+// personaController --> app.get('/:persona', getUserByPersona);
+persona_db.getUserByPersona = function (persona, funcallback) {
 
-    connection.query("select * from persona where dni = ?", dni, (err, respuesta) => {
+    connection.query("select * from persona where dni = ?", persona, (err, result) => {
         if (err) {
             funcallback({
-                mensajito: "a ocurrido algun error, posiblemente de sintaxis en buscar la persona",
-                detalle: err
+                menssage: "a ocurrido algun error, posiblemente de sintaxis en buscar la persona",
+                detail: err
             });
-        } else if (respuesta.length == 0) { //consulta no impacta en nada dentro de la BD
+        } else if (result.length == 0) { //consulta no impacta en nada dentro de la BD
             funcallback(undefined, {
-                mensajito: "no se encontro la persona buscada",
-                detalle: respuesta
+                menssage: "no se encontro la persona buscada",
+                detail: result
             });
         } else {
             consulta = "select nickname from usuario INNER JOIN persona on usuario.persona = persona.dni and usuario.persona = ?";
-            connection.query(consulta, dni, (err, r) => {
+            connection.query(consulta, persona, (err, result) => {
                 if (err) {
                     funcallback({
-                        mensajito: "a ocurrido algun error, posiblemente de sintaxis en buscar el nickname",
-                        detalle: err
+                        menssage: "a ocurrido algun error, posiblemente de sintaxis en buscar el nickname",
+                        detail: err
                     });
-                } else if (r.length == 0) { //array vacio
+                } else if (result.length == 0) { //array vacio
                     funcallback(undefined, {
-                        mensajito: "la persona seleccionada no posee usuario registrado en la base de datos",
-                        detalle: r
+                        menssage: "la persona seleccionada no posee usuario registrado en la base de datos",
+                        detail: result
                     });
                 } else {
                     funcallback(undefined, { // consulta impacta bien, y el array no esta vacio 
-                        mensajito: `El nikname de la persona seleccionada es ${r[0]['nickname']}`,
-                        detalle: r
+                        menssage: `El nikname de la persona seleccionada es ${result[0]['nickname']}`,
+                        detail: result
                     });
                 }
             });
-
-
         }
     });
-
-
-
-
 }
 
-
+// exportamos el objeto persona_db para que Node.JS lo haga publico y pueda utilizarse desde otros modulos
 module.exports = persona_db;

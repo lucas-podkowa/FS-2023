@@ -4,23 +4,26 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-var usuarioDb = require("model/user.js");
+var usuarioDb = require("model/usuario.js");
 
-//req : es lo que llega desde el frontend (en nuestro caso Postman)
+// -------------------------------------------------------- 
+// --rutas de escucha (endpoint) dispoibles para USUARIOS-- 
+// -------------------------------------------------------- 
+
+app.get('/', getAll);
+app.post('/', createUser);
+app.put('/:id_usuario', updateUser);
+app.delete('/:id_usuario', deleteUser);
+
+
+// -------------------------------------------------------- 
+// ---------FUNCIONES UTILIZADAS EN ENDPOINTS ------------- 
+// -------------------------------------------------------- 
+
+//req : datos enviados desde el frontend para que lo utilicemos
 //res : respuesta enviada desde el servidor al frontend
 
-//atendiendo el endpoint /api/persona mediante el metodo GET 
-// |--> llamar a la funcion getAll() que está en el archivo encargado de hestionar lo relacionado a la tabla PERSONA en la BD
-//      y procesara la respuesta en una funcion callback
-// |--> GetAll() enviara como respuesta un error (que le enviará la base de datos) o los datos en caso de exito   
-
-
-app.getAll('/', getAll);
-app.post('/', createUser);
-
-
-
-function getAll (req, res) {
+function getAll(req, res) {
     usuarioDb.getAll((err, resultado) => {
         if (err) {
             res.status(500).send(err);
@@ -37,6 +40,34 @@ function createUser(req, res) {
             res.status(500).send(err);
         } else {
             res.send(resultado);
+        }
+    });
+}
+
+
+function updateUser(req, res) {
+    let datos_usuario = req.body; //aquellos datos que quiero reemplazar, modificar, etc 
+    let id_usaurio = req.params.id_usuario //para identificarlo dentro de la base de datos
+    usuarioDb.update(datos_usuario, id_usaurio, (err,resultado) => {
+        if (err) {
+            res.status(500).send(err);
+        } else {
+            res.send(resultado)
+        }
+    })
+}
+
+
+function deleteUser(req, res) {
+    usuarioDb.borrar(req.params.id_usuario, (err, result_model) => {
+        if (err) {
+            res.status(500).send(err);
+        } else {
+            if (result_model.detail.affectedRows == 0) {
+                res.status(404).send(result_model.message);
+            } else {
+                res.send(result_model.message);
+            }
         }
     });
 }

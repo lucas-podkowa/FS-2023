@@ -1,34 +1,39 @@
 import React, { Component } from 'react'
 
+/*
+state representan los valores renderizados, es decir, lo que hay actualmente en la pantalla. 
+Las llamadas a setState son asíncronas; 
+no te fíes de que "this.state" refleje el nuevo valor inmediatamente después de llamar a setState .
+*/
 export class Home extends Component {
 
     constructor(props) {
         super(props)
 
         this.state = {
-            contador: 0
+            contador: 100
         }
         //this.incremetar = this.incremetar.bind(this);
     }
 
-    incremetar() {
-        //console.log(this)
-        this.setState({
-            contador: this.state.contador + 1
-        },
-            () => {
-                console.log("estado callback  " + this.state.contador);
-            });
-        // this.state.contador = this.state.contador + 1;
+    handleClick = () => {
+        this.setState({ contador: this.state.contador + 1 });
     }
 
     render() {
+        const numbers = [1, 2, 3, 4, 5];
+        const listItems = numbers.map((number) =>
+            <li key={number.toString()}>{number}</li>
+        );
+        console.log(listItems)
 
         return (
             <>
                 <p>Contador en: {this.state.contador} </p>
-                <button onClick={() => this.incremetar()}
+                <button
+                    onClick={this.handleClick}
                     className="btn btn-outline-primary">Incrementar</button>
+                <ul>{listItems}</ul>
             </>
         )
     }

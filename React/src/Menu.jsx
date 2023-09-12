@@ -14,14 +14,15 @@ export class Menu extends Component {
                         <div className="collapse navbar-collapse" id="navbarNav">
                             <ul className="navbar-nav">
                                 <li className="nav-item">
-                                    <Link to="/login" className='nav-link'> Login</Link>
-                                </li>
-                                <li className="nav-item">
                                     <Link to="/vehiculos" className='nav-link'> vehiculos</Link>
                                 </li>
                                 <li className="nav-item">
                                     <Link to="/reservas" className='nav-link'> Reservas</Link>
                                 </li>
+                                <li className="nav-item">
+                                    <Link to="/login" className='nav-link'> Login</Link>
+                                </li>
+
                             </ul>
                         </div>
                     </div>

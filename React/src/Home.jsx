@@ -1,4 +1,6 @@
 import React, { Component } from 'react'
+import Formulario_X from './Formulario_X';
+import FlavorForm from './FlavorForm';
 
 /*
 state representan los valores renderizados, es decir, lo que hay actualmente en la pantalla. 
@@ -33,7 +35,11 @@ export class Home extends Component {
                 <button
                     onClick={this.handleClick}
                     className="btn btn-outline-primary">Incrementar</button>
-                <ul>{listItems}</ul>
+                {/* <ul >{listItems}</ul> */}
+
+                <Formulario_X />
+                <hr />
+                <FlavorForm />
             </>
         )
     }

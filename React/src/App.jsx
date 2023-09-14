@@ -5,7 +5,7 @@ import Menu from "./Menu";
 import Reservas from "./Models/Reservas";
 import Vehiculos from "./Models/Vehiculos";
 import Home from "./Home";
-import ComponenteClass from "./ComponenteClass";
+import ComponenteClass from "./Ejemplos_Hooks/ComponenteClass";
 import Clock from "./Clock";
 import Toggle from "./Toggle";
 
@@ -19,9 +19,9 @@ function App() {
         <Route path="/vehiculos" element={<Vehiculos />}></Route>
         <Route path="/login" element={<Login />}></Route>
         <Route path="/texto/:text" element={<Texto />} />
-        <Route path="/componente" element={<ComponenteClass />} />
         <Route path="/reloj" element={<Clock />} />
         <Route path="/boton" element={<Toggle />} />
+        <Route path="/hook" element={<ComponenteClass />} />
 
       </Routes>
 

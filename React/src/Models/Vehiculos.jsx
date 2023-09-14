@@ -1,17 +1,23 @@
 import React, { Component } from 'react'
+import Contador from '../Ejemplos_Hooks/Contador'
+import { Contador_Hook } from '../Ejemplos_Hooks/Contador_Hook'
+import ComponenteClass from '../Ejemplos_Hooks/ComponenteClass'
+import { ComponenteHook } from '../Ejemplos_Hooks/ComponenteHook'
 
 export class Vehiculos extends Component {
     render() {
         return (
             <div>
-                <div className="card" >
-                    <img src="..." className="card-img-top" alt="..." />
-                    <div className="card-body">
-                        <h5 className="card-title">Card title</h5>
-                        <p className="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                        <a href="#" className="btn btn-primary">Go somewhere</a>
-                    </div>
-                </div>
+                <Contador />
+                <hr />
+                <br />
+                <Contador_Hook />
+                <hr />
+                <br />
+                <ComponenteClass />
+                <br />
+                <hr />
+                <ComponenteHook />
             </div>
         )
     }

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import Formulario_X from './Formulario_X';
-import FlavorForm from './FlavorForm';
+import Formulario_X from './Ejemplos/Formulario_X';
+import FlavorForm from './Ejemplos/FlavorForm';
 
 /*
 state representan los valores renderizados, es decir, lo que hay actualmente en la pantalla. 

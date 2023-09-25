@@ -19,11 +19,11 @@ export class Internal_Vehiculos_Edit extends Component {
     }
 
     // como utilizamos el mismo formulario para crear y actualizar vehiculos, si no vinene ningun parametro significa que es un ALTA
-    // pero si viene "vehiculo_id" por parametro (dentro de las props del constructor) significa que es una MODIFICACION
+    // pero si viene "vehiculo_id" por parametro (dentro de las this.props del constructor) significa que es una MODIFICACION
     // por lo que aprovechamos el ciclo de vida del componente para realizar un fetch al backend y traer los datos del vehiculo a ser
     // modificado si es que viene dicho dato por parametro
     componentDidMount() {
-
+        
         if (this.props.params.vehiculo_id) {
            
             let parametros = {
@@ -33,7 +33,7 @@ export class Internal_Vehiculos_Edit extends Component {
                     'Accept': 'application/json'
                 }
             }
-           
+      
             fetch(`http://localhost:8080/vehiculo/${this.props.params.vehiculo_id}`, parametros)
                 .then(res => {
                     return res.json()
@@ -50,10 +50,10 @@ export class Internal_Vehiculos_Edit extends Component {
                     result => {
                         if (result.ok) {
                             this.setState({
-                                marca_id: result.body.marca_id,
-                                matricula: result.body.matricula,
-                                modelo: result.body.modelo,
-                                ano: result.body.ano
+                                marca_id: result.body.detail.marca_id,
+                                matricula: result.body.detail.matricula,
+                                modelo: result.body.detail.modelo,
+                                ano: result.body.detail.ano
                             });
                         } else {
                             toast.error(result.body.message, {
@@ -119,6 +119,7 @@ export class Internal_Vehiculos_Edit extends Component {
                             progress: undefined,
                             theme: "light",
                         });
+                        this.props.navigate("/vehiculos")
                     } else {
                         toast.error(result.body.message, {
                             position: "bottom-center",
@@ -133,11 +134,12 @@ export class Internal_Vehiculos_Edit extends Component {
                     }
                 }
 
+
             ).catch(
                 (error) => { console.log(error) }
             );
         
-        this.props.navigate("/vehiculos")
+        
     }
 
 
@@ -230,7 +232,6 @@ export class Internal_Vehiculos_Edit extends Component {
 }
 
 export default Vehiculos_Edit
-
 
 
 

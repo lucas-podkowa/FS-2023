@@ -9,16 +9,15 @@ export class Vehiculos extends Component {
         this.state = {
             vehiculos: []
         }
-        this.handleClickDelete = this.handleClickDelete.bind(this)
+        this.handleClickDelete = this.handleClickDelete.bind(this);
     }
 
-
+    
     // funcion ejecutada al montar el componente, tras ejecutarse el render, 
     // este metodo realiza un fetch al endpoint listar()
     // para traer el listado de vehiculos y setearlos en en estado "vehiculos"
     componentDidMount() {
-        const url = "http://localhost:8080/vehiculo";
-        fetch(url)
+        fetch("http://localhost:8080/vehiculo")
             .then(res => {
                 return res.json()
                     .then(body => {
@@ -53,21 +52,21 @@ export class Vehiculos extends Component {
             ).catch(
                 (error) => { console.log(error) }
             );
+
+
     }
 
+    // handler invocado mediante el evento onCLick() del boton eliminar en la tabla vehiculos
+    // recibe como parametro a "vehiculo_id" y lo utilia para pegarle al delete del backend
     handleClickDelete(vehiculo_id) {
-        //tenemos el id y necesitamos invocar la funcion del backend para eliminarlo
-
         let parametros = {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
-                'Accept': 'application/json',
             }
         }
         debugger
-        const url = `http://localhost:8080/vehiculo/${vehiculo_id}`
-        fetch(url, parametros)
+        fetch(`http://localhost:8080/vehiculo/${vehiculo_id}`, parametros)
             .then(res => {
                 return res.json()
                     .then(body => {
@@ -77,7 +76,7 @@ export class Vehiculos extends Component {
                             headers: res.headers,
                             body: body
                         };
-                    })
+                    });
             }).then(
                 result => {
                     if (result.ok) {
@@ -108,11 +107,7 @@ export class Vehiculos extends Component {
             ).catch(
                 (error) => { console.log(error) }
             );
-
-
-
     }
-
 
 
     render() {
@@ -122,18 +117,12 @@ export class Vehiculos extends Component {
                     <td>{vehiculo.matricula}</td>
                     <td>{vehiculo.ano}</td>
                     <td>{vehiculo.modelo}</td>
-                    <td>
-                        <Link to={`/vehiculo/edit/${vehiculo.vehiculo_id}`} className='btn btn-primary'>
-                            <span class="material-symbols-outlined">edit</span>
-                        </Link>
-
-                        <button className='btn btn-danger' onClick={() => this.handleClickDelete(vehiculo.vehiculo_id)}>
-                            <span class="material-symbols-outlined">
-                                delete
-                            </span>
-                        </button>
-                    </td>
-
+                    <Link to={`/vehiculo/edit/${vehiculo.vehiculo_id}`} className='btn btn-primary'>
+                        <span class="material-symbols-outlined">edit</span>
+                    </Link>
+                    <button className='btn btn-danger' onClick={() => this.handleClickDelete(vehiculo.vehiculo_id)}>
+                        <span class="material-symbols-outlined">delete</span>
+                    </button>
                 </tr>
             )
 
@@ -153,10 +142,9 @@ export class Vehiculos extends Component {
                         <tbody>
                             {filas}
                         </tbody>
-
                     </table>
                     <br />
-                    <Link to="/vehiculos/edit" className='btn btn-info'>Nuevo Vehiculo</Link>
+                    <Link to="/vehiculos/edit" className='btn btn-danger'>Nuevo Vehiculo</Link>
                 </div>
             </>
         );
@@ -165,16 +153,3 @@ export class Vehiculos extends Component {
 }
 
 export default Vehiculos
-
-
-
-/*
-¿cuál sería el orden de invocacion o llamado a funciones de un componente?
-1. cotructor
-2. render ()
-3. componentDidMount()
-    3.1 setState (){  colver a ejecutar el render()}
-4. los llamados a proposito,  nuestras funciones  
-n. componentWillUnmount()  
-
-*/

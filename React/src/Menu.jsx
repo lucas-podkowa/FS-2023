@@ -14,10 +14,7 @@ export class Menu extends Component {
                         <div className="collapse navbar-collapse" id="navbarNav">
                             <ul className="navbar-nav">
                                 <li className="nav-item">
-                                    <Link to="/vehiculos" className='nav-link'> vehiculos</Link>
-                                </li>
-                                <li className="nav-item">
-                                    <Link to="/vehiculos/grid" className='nav-link'> vehiculos Grid</Link>
+                                    <Link to="/vehiculos" className='nav-link'> Vehiculos</Link>
                                 </li>
                                 <li className="nav-item">
                                     <Link to="/reservas" className='nav-link'> Reservas</Link>

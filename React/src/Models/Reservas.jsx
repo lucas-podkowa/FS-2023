@@ -4,6 +4,7 @@ export class Reservas extends Component {
     render() {
         return (
             <div>
+                Reservas
             </div>
         )
     }

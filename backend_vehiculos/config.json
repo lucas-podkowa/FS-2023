@@ -1,0 +1,11 @@
+{
+    "database": {
+        "host": "localhost",
+        "user": "root",
+        "password": "admin",
+        "database": "vehiculos_fio"
+    },
+    "server": {
+        "port": 8080
+    }
+}

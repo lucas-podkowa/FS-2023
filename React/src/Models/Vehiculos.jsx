@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import jwt_decode from "jwt-decode";
+
 
 export class Vehiculos extends Component {
     constructor(props) {
@@ -17,8 +19,18 @@ export class Vehiculos extends Component {
     // este metodo realiza un fetch al endpoint listar()
     // para traer el listado de vehiculos y setearlos en en estado "vehiculos"
     componentDidMount() {
-        const url = "http://localhost:8080/vehiculo";
-        fetch(url)
+
+        let parametros = {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'authorization': sessionStorage.getItem('token')
+            }
+        }
+
+        
+        
+        fetch("http://localhost:8080/vehiculo", parametros)
             .then(res => {
                 return res.json()
                     .then(body => {
@@ -65,7 +77,6 @@ export class Vehiculos extends Component {
                 'Accept': 'application/json',
             }
         }
-        debugger
         const url = `http://localhost:8080/vehiculo/${vehiculo_id}`
         fetch(url, parametros)
             .then(res => {
@@ -128,7 +139,7 @@ export class Vehiculos extends Component {
                         </Link>
 
                         <button className='btn btn-danger' onClick={() => this.handleClickDelete(vehiculo.vehiculo_id)}>
-                            <span class="material-symbols-outlined">
+                            <span className="material-symbols-outlined">
                                 delete
                             </span>
                         </button>

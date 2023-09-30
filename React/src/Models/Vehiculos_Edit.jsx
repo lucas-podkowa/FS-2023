@@ -30,7 +30,8 @@ export class Internal_Vehiculos_Edit extends Component {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Accept': 'application/json'
+                    'Accept': 'application/json',
+                    'authorization': sessionStorage.getItem('token')
                 }
             }
       

@@ -27,8 +27,6 @@ export class Home extends Component {
         const listItems = numbers.map((number) =>
             <li key={number.toString()}>{number}</li>
         );
-        console.log(listItems)
-
         return (
             <>
                 <p>Contador en: {this.state.contador} </p>

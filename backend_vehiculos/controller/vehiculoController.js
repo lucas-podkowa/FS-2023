@@ -7,14 +7,15 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 var db_vehiculo = require("model/vehiculo.js");
+const securityController = require("controller/securityController.js");
 
 
 // -------------------------------------------------------- 
 // --rutas de escucha (endpoint) dispoibles para PERSONAS-- 
 // -------------------------------------------------------- 
-app.get('/', listar);
-app.get('/:vehiculo_id', buscarPorVehiculoID);
-app.post('/', crear);
+app.get('/', securityController.verificarToken, listar);
+app.get('/:vehiculo_id', securityController.verificarToken, buscarPorVehiculoID);
+app.post('/', securityController.verificarToken, crear);
 app.put('/:vehiculo_id', actualizar);
 app.delete('/:vehiculo_id', borrar);
 

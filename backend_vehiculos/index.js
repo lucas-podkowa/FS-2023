@@ -14,7 +14,7 @@ morgan(':method :url :status :res[content-length] - :response-time ms');
 const configuracion = require("config.json");
 
 const securityController = require("controller/securityController.js");
-app.use('/security', securityController);
+app.use('/security', securityController.app);
 
 
 const personaController = require("controller/personaController.js");

@@ -6,12 +6,16 @@ app.use(express.urlencoded({ extended: true }));
 
 var usuarioDb = require("model/usuario.js");
 
+const securityController = require("controller/securityController.js");
+
+
+
 // -------------------------------------------------------- 
 // --rutas de escucha (endpoint) dispoibles para USUARIOS-- 
 // -------------------------------------------------------- 
 
-app.get('/', getAll);
-app.post('/', createUser);
+app.get('/', securityController.verificarToken, getAll);
+app.post('/', securityController.verificarToken, createUser);
 app.put('/:id_usuario', updateUser);
 app.delete('/:id_usuario', deleteUser);
 
@@ -48,7 +52,7 @@ function createUser(req, res) {
 function updateUser(req, res) {
     let datos_usuario = req.body; //aquellos datos que quiero reemplazar, modificar, etc 
     let id_usaurio = req.params.id_usuario //para identificarlo dentro de la base de datos
-    usuarioDb.update(datos_usuario, id_usaurio, (err,resultado) => {
+    usuarioDb.update(datos_usuario, id_usaurio, (err, resultado) => {
         if (err) {
             res.status(500).send(err);
         } else {

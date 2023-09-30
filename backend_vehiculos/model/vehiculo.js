@@ -39,7 +39,7 @@ db_vehiculo.crear = function (datos, funCallback) {
                     detail: err
                 });
             } else {
-                funCallback({
+                funCallback({   
                     message: "error diferente",
                     detail: err
                 });

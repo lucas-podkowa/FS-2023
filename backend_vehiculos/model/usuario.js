@@ -142,14 +142,14 @@ usuario_db.findByNickname = function (nickname, funCallback) {
             return;
         } else {
 
-            if (result.affectedRows == 0) {
-                funCallback({
-                    message: "No existe un usuario que coincida con el criterio de busqueda",
-                    detail: result
-                });
-            } else {
+            if (result.length > 0) {
                 funCallback(undefined, {
                     message: `Usuario encontrado`,
+                    detail: result[0]
+                });
+            } else {
+                funCallback({
+                    message: "No existe un usuario que coincida con el criterio de busqueda",
                     detail: result
                 });
             }

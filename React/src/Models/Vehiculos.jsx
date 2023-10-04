@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import jwt_decode from "jwt-decode";
+import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
+
 
 
 export class Vehiculos extends Component {
@@ -9,11 +11,13 @@ export class Vehiculos extends Component {
         super(props)
 
         this.state = {
-            vehiculos: []
+            vehiculos: [],
+            modal: false
         }
         this.handleClickDelete = this.handleClickDelete.bind(this)
+        this.closeModal = this.closeModal.bind(this)
+        this.showModal = this.showModal.bind(this)
     }
-
 
     // funcion ejecutada al montar el componente, tras ejecutarse el render, 
     // este metodo realiza un fetch al endpoint listar()
@@ -28,8 +32,8 @@ export class Vehiculos extends Component {
             }
         }
 
-        
-        
+
+
         fetch("http://localhost:8080/vehiculo", parametros)
             .then(res => {
                 return res.json()
@@ -47,7 +51,9 @@ export class Vehiculos extends Component {
                 result => {
                     if (result.ok) {
                         this.setState({
-                            vehiculos: result.body
+                            vehiculos: result.body,
+                            //siempre que se monta el componente el modal tiene que estar cerrado
+                            modal: false
                         });
                     } else {
                         toast.error(result.body.message, {
@@ -67,9 +73,23 @@ export class Vehiculos extends Component {
             );
     }
 
-    handleClickDelete(vehiculo_id) {
-        //tenemos el id y necesitamos invocar la funcion del backend para eliminarlo
+    closeModal() {
+        this.setState({
+            modal: false,
+            idToDelete: null
+        })
+    }
 
+    showModal(vehiculo_id) {
+
+        this.setState({
+            modal: true,
+            idToDelete: vehiculo_id
+        })
+    }
+
+
+    handleClickDelete() {
         let parametros = {
             method: 'DELETE',
             headers: {
@@ -77,7 +97,8 @@ export class Vehiculos extends Component {
                 'Accept': 'application/json',
             }
         }
-        const url = `http://localhost:8080/vehiculo/${vehiculo_id}`
+        //this.state.idToDelete se carga cuando abrimos el modal con showModal(vehiculo_id)
+        const url = `http://localhost:8080/vehiculo/${this.state.idToDelete}`
         fetch(url, parametros)
             .then(res => {
                 return res.json()
@@ -102,6 +123,7 @@ export class Vehiculos extends Component {
                             progress: undefined,
                             theme: "light",
                         });
+                        //al finalizar la eliminacion volvemos a invocar el componentDidMount() para recargar nuestro listado
                         this.componentDidMount();
                     } else {
                         toast.error(result.body.message, {
@@ -119,9 +141,6 @@ export class Vehiculos extends Component {
             ).catch(
                 (error) => { console.log(error) }
             );
-
-
-
     }
 
 
@@ -138,7 +157,7 @@ export class Vehiculos extends Component {
                             <span class="material-symbols-outlined">edit</span>
                         </Link>
 
-                        <button className='btn btn-danger' onClick={() => this.handleClickDelete(vehiculo.vehiculo_id)}>
+                        <button className='btn btn-danger' onClick={() => this.showModal(vehiculo.vehiculo_id)}>
                             <span className="material-symbols-outlined">
                                 delete
                             </span>
@@ -151,7 +170,7 @@ export class Vehiculos extends Component {
         });
         return (
             <>
-                <div className='container'>
+                <div>
                     <table className='table  table-striped'>
                         <thead>
                             <tr>
@@ -169,6 +188,21 @@ export class Vehiculos extends Component {
                     <br />
                     <Link to="/vehiculos/edit" className='btn btn-info'>Nuevo Vehiculo</Link>
                 </div>
+
+                <Modal show={this.state.modal} onHide={this.closeModal}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Confirmación de Eliminacion</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>¿Está seguro de eliminar el vehiculo seleccionado?</Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="danger" onClick={this.closeModal}>
+                            Cancelar
+                        </Button>
+                        <Button variant="primary" onClick={this.handleClickDelete}>
+                            Eliminar
+                        </Button>
+                    </Modal.Footer>
+                </Modal>
             </>
         );
 

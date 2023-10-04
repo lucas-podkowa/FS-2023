@@ -14,9 +14,15 @@ export class Internal_Vehiculos_Edit extends Component {
             marca_id: null,
             matricula: '',
             modelo: '',
-            ano: null
+            ano: null,
+            modal: false
         }
+
+     
+
     }
+
+
 
     // como utilizamos el mismo formulario para crear y actualizar vehiculos, si no vinene ningun parametro significa que es un ALTA
     // pero si viene "vehiculo_id" por parametro (dentro de las this.props del constructor) significa que es una MODIFICACION
@@ -227,7 +233,24 @@ export class Internal_Vehiculos_Edit extends Component {
                         </form>
                     </div>
                 </div>
+{/* 
+                <Modal show={show} onHide={handleClose}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Modal heading</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>Woohoo, you are reading this text in a modal!</Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={handleClose}>
+                            Close
+                        </Button>
+                        <Button variant="primary" onClick={handleClose}>
+                            Save Changes
+                        </Button>
+                    </Modal.Footer>
+                </Modal> */}
             </div>
+
+            
         )
     }
 }

@@ -34,7 +34,7 @@ export class InternalLogin extends Component {
                 'Content-Type': 'application/json',
             }
         }
-     
+
         fetch("http://localhost:8080/security/login", parametros)
             .then(res => {
                 return res.json()
@@ -61,7 +61,7 @@ export class InternalLogin extends Component {
                             progress: undefined,
                             theme: "light",
                         });
-                        // this.props.navigate("/")
+                        this.props.navigate("/")
                     } else {
                         toast.error(result.body.message, {
                             position: "bottom-center",

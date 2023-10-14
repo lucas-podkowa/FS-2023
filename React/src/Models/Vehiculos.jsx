@@ -3,8 +3,7 @@ import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-
-
+import jwt_decode from "jwt-decode";
 
 export class Vehiculos extends Component {
     constructor(props) {
@@ -38,7 +37,6 @@ export class Vehiculos extends Component {
             .then(res => {
                 return res.json()
                     .then(body => {
-
                         return {
                             status: res.status,
                             ok: res.ok,
@@ -146,6 +144,9 @@ export class Vehiculos extends Component {
 
 
     render() {
+
+        var tokenDecoded = jwt_decode(sessionStorage.getItem('token'));
+        const rol = tokenDecoded.rol;
         const filas = this.state.vehiculos.map((vehiculo, index) => {
             return (
                 <tr key={index}>
@@ -186,7 +187,12 @@ export class Vehiculos extends Component {
 
                     </table>
                     <br />
-                    <Link to="/vehiculos/edit" className='btn btn-info'>Nuevo Vehiculo</Link>
+                    {rol === "Administrador"
+                        ? <Link to="/vehiculos/edit" className='btn btn-info'>Nuevo Vehiculo</Link>
+                        : null
+                    }
+
+
                 </div>
 
                 <Modal show={this.state.modal} onHide={this.closeModal}>

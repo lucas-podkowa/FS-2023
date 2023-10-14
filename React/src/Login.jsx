@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify';
+import jwt_decode from "jwt-decode";
+
 import 'react-toastify/dist/ReactToastify.css';
-
-
 
 export class InternalLogin extends Component {
 
@@ -61,7 +61,15 @@ export class InternalLogin extends Component {
                             progress: undefined,
                             theme: "light",
                         });
+
+                        // var tokenDecoded = jwt_decode(result.body.token);
+
+                        // if (tokenDecoded.rol === "Agente") {
+                        //     this.props.navigate("/reservas")
+                        // } else {
                         this.props.navigate("/")
+                        // }
+
                     } else {
                         toast.error(result.body.message, {
                             position: "bottom-center",
@@ -89,8 +97,6 @@ export class InternalLogin extends Component {
                     });
                 }
             );
-
-
     }
 
 
@@ -100,7 +106,7 @@ export class InternalLogin extends Component {
 
     render() {
         return (
-            <div className='container'>
+            <div className='container conFondo'>
                 <div className='row'>
                     <div className='col'>
                         <h1>Iniciar Sesión</h1>

@@ -2,3 +2,18 @@
     color: white;
     background-color: #333;
 }
+
+
+/* utilizado en login */
+.conFondo {
+    background-color: #eee;
+}
+
+#nickname {
+    color: red;
+}
+
+.circular {
+    border-radius: 100%;
+    margin-left: 120px;
+}

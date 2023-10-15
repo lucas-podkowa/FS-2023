@@ -1,13 +1,12 @@
 //configuraciones iniciales
-require('rootpath')();
-
-
 //se inicializan las constantes para tener acceso a la funcionalidad de mysql asi como el archivo config donde se encuentran los datos de conexion
+
+require('rootpath')();
 const mysql = require('mysql');
-const configuracion = require("config.json");
+const config = require("config/config.json");
 
 //inicializa la conexion entre el servidor y la base de datos
-var connection = mysql.createConnection(configuracion.database);
+var connection = mysql.createConnection(config.database);
 connection.connect((err) => {
     if (err) {
         console.log(err);
@@ -39,7 +38,7 @@ db_vehiculo.crear = function (datos, funCallback) {
                     detail: err
                 });
             } else {
-                funCallback({   
+                funCallback({
                     message: "error diferente",
                     detail: err
                 });
@@ -56,7 +55,24 @@ db_vehiculo.crear = function (datos, funCallback) {
 //R = READ
 // vehiculoController --> app.get('/', getAll);
 db_vehiculo.listar = function (funCallback) {
-    var consulta = 'SELECT * FROM vehiculo';
+    var consulta = 'SELECT vehiculo.*, CONCAT (vehiculo.modelo, " (", vehiculo.matricula, ")") vehiculo_desc FROM vehiculo';
+    connection.query(consulta, function (err, rows) {
+        if (err) {
+            funCallback({
+                message: "ha ocurrido un error inesperado al listar los vehiculos",
+                detail: err
+            });
+        } else {
+            funCallback(undefined, rows);
+        }
+    });
+}
+
+//R = READ
+// vehiculoController --> app.get('/disponibles', findDisponibles);
+db_vehiculo.findDisponibles = function (funCallback) {
+    var consulta = `SELECT * FROM vehiculo where vehiculo_id NOT IN 
+    (SELECT vehiculo_id FROM reservas where finalizada is false and cancelada is false)`;
     connection.query(consulta, function (err, rows) {
         if (err) {
             funCallback({
@@ -159,45 +175,6 @@ db_vehiculo.buscarPorVehiculoID = function (vehiculo_id, funCallback) {
     });
 
 }
-
-/*
-// vehiculoController --> app.get('/:persona', getUserByPersona);
-db_vehiculo.getUserByPersona = function (persona, funcallback) {
-
-    connection.query("select * from persona where dni = ?", persona, (err, result) => {
-        if (err) {
-            funcallback({
-                menssage: "a ocurrido algun error, posiblemente de sintaxis en buscar la persona",
-                detail: err
-            });
-        } else if (result.length == 0) { //consulta no impacta en nada dentro de la BD
-            funcallback(undefined, {
-                menssage: "no se encontro la persona buscada",
-                detail: result
-            });
-        } else {
-            consulta = "select nickname from usuario INNER JOIN persona on usuario.persona = persona.dni and usuario.persona = ?";
-            connection.query(consulta, persona, (err, result) => {
-                if (err) {
-                    funcallback({
-                        menssage: "a ocurrido algun error, posiblemente de sintaxis en buscar el nickname",
-                        detail: err
-                    });
-                } else if (result.length == 0) { //array vacio
-                    funcallback(undefined, {
-                        menssage: "la persona seleccionada no posee usuario registrado en la base de datos",
-                        detail: result
-                    });
-                } else {
-                    funcallback(undefined, { // consulta impacta bien, y el array no esta vacio 
-                        menssage: `El nikname de la persona seleccionada es ${result[0]['nickname']}`,
-                        detail: result
-                    });
-                }
-            });
-        }
-    });
-}*/
 
 // exportamos el objeto db_vehiculo para que Node.JS lo haga publico y pueda utilizarse desde otros modulos
 module.exports = db_vehiculo;

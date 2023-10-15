@@ -1,15 +1,12 @@
 //configuraciones iniciales
+//se inicializan las constantes para tener acceso a la funcionalidad de mysql asi como el archivo config donde se encuentran los datos de conexion
 require('rootpath')();
-
-/*
-se inicializan las constantes para tener acceso a la funcionalidad de mysql asi como el archivo config donde se encuentran los datos de conexion
-*/
-
 const mysql = require('mysql');
-const configuracion = require("config.json");
+const config = require("config/config.json");
+
 
 //inicializa la conexion entre el servidor y la base de datos
-var connection = mysql.createConnection(configuracion.database);
+var connection = mysql.createConnection(config.database);
 connection.connect((err) => {
     if (err) {
         console.log(err);
@@ -57,7 +54,7 @@ persona_db.create = function (datos, funCallback) {
 
 //R = READ
 // personaController --> app.get('/', getAll);
-persona_db.getAll = function (funCallback) {
+persona_db.listar = function (funCallback) {
     var consulta = 'SELECT * FROM persona';
     connection.query(consulta, function (err, rows) {
         if (err) {

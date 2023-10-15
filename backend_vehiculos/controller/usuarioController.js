@@ -6,7 +6,7 @@ app.use(express.urlencoded({ extended: true }));
 
 var usuarioDb = require("model/usuario.js");
 
-const securityController = require("controller/securityController.js");
+const auth = require("config/auth.js");
 
 
 
@@ -14,8 +14,8 @@ const securityController = require("controller/securityController.js");
 // --rutas de escucha (endpoint) dispoibles para USUARIOS-- 
 // -------------------------------------------------------- 
 
-app.get('/', securityController.verificarToken, getAll);
-app.post('/', securityController.verificarToken, createUser);
+app.get('/', auth.verificarToken, getAll);
+app.post('/', auth.verificarToken, createUser);
 app.put('/:id_usuario', updateUser);
 app.delete('/:id_usuario', deleteUser);
 

@@ -19,6 +19,16 @@ export class Reservas extends Component {
             ids: []
         }
     }
+    configTosti = {
+        position: "bottom-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+    }
 
     componentDidMount() {
         let parametros = {
@@ -65,34 +75,25 @@ export class Reservas extends Component {
                             }
                         }
                         fetch("http://localhost:8080/reserva/personas", parametros)
-                            .then(res => {
-                                return res.json()
+                            .then(result => {
+                                return result.json()
                                     .then(body => {
                                         return {
-                                            status: res.status,
-                                            ok: res.ok,
-                                            headers: res.headers,
+                                            status: result.status,
+                                            ok: result.ok,
+                                            headers: result.headers,
                                             body: body
                                         };
                                     })
                             }).then(
-                                result => {
-                                    if (result.ok) {
+                                resp => {
+                                    if (resp.ok) {
                                         this.setState({
-                                            personas_x_reservas: result.body,
+                                            personas_x_reservas: resp.body,
                                             modal: false
                                         });
                                     } else {
-                                        toast.error(result.body.message, {
-                                            position: "bottom-center",
-                                            autoClose: 5000,
-                                            hideProgressBar: false,
-                                            closeOnClick: true,
-                                            pauseOnHover: true,
-                                            draggable: true,
-                                            progress: undefined,
-                                            theme: "light",
-                                        });
+                                        toast.error(resp.body.message, this.configTosti);
                                     }
                                 }
                             ).catch(
@@ -100,26 +101,15 @@ export class Reservas extends Component {
                             );
 
                     } else {
-                        toast.error(result.body.message, {
-                            position: "bottom-center",
-                            autoClose: 5000,
-                            hideProgressBar: false,
-                            closeOnClick: true,
-                            pauseOnHover: true,
-                            draggable: true,
-                            progress: undefined,
-                            theme: "light",
-                        });
+                        toast.error(result.body.message, this.configTosti);
                     }
                 }
             ).catch(
                 (error) => { console.log(error) }
             );
-
-
     }
 
-
+    
     handleClickCancelar = () => {
         let parametros = {
             method: 'PUT',
@@ -128,6 +118,41 @@ export class Reservas extends Component {
             }
         }
         const url = `http://localhost:8080/reserva/cancelar/${this.state.idToDelete}`
+        fetch(url, parametros)
+            .then(res => {
+                return res.json()
+                    .then(body => {
+                        return {
+                            status: res.status,
+                            ok: res.ok,
+                            headers: res.headers,
+                            body: body
+                        };
+                    })
+            }).then(
+                result => {
+                    if (result.ok) {
+                        toast.success(result.body.message, this.configTosti);
+                        this.componentDidMount();
+                    } else {
+                        toast.error(result.body.message, this.configTosti);
+                    }
+                }
+            ).catch(
+                (error) => { console.log(error) }
+            );
+    }
+
+
+    //utilizado cuando se preciona el boton verde del autito, significa que la reserva ha finalizado, todos volvieron y el coche esta liberado
+    handleClickFinalizar = (reserva_id) => {
+        let parametros = {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        }
+        const url = `http://localhost:8080/reserva/finalizar/${reserva_id}`
         fetch(url, parametros)
             .then(res => {
                 return res.json()
@@ -169,7 +194,9 @@ export class Reservas extends Component {
             ).catch(
                 (error) => { console.log(error) }
             );
+
     }
+
     closeModal = () => {
         this.setState({
             modal: false,
@@ -196,11 +223,14 @@ export class Reservas extends Component {
     render() {
         const filas = this.state.reservas.map((reserva, index) => {
 
-            const personasEnReserva = this.state.personas_x_reservas
-                .filter(persona => persona.reserva_id === reserva.reserva_id)
-                .map(persona => persona.agente)
-                .join(', ');
+            var personasEnReserva = [];
+            if (this.state.personas_x_reservas.length > 0) {
+                personasEnReserva = this.state.personas_x_reservas
+                    .filter(persona => persona.reserva_id === reserva.reserva_id)
+                    .map(persona => persona.agente)
+                    .join(', ');
 
+            }
             //es lo mismo que hacer lo siguiente
             // let personasEnReserva = []
             // for (const persona of this.state.personas_x_reservas) {
@@ -226,7 +256,7 @@ export class Reservas extends Component {
                                 cancel
                             </span>
                         </button>
-                        <button className='btn btn-outline-success btn-sm' >
+                        <button className='btn btn-outline-success btn-sm' onClick={() => this.handleClickFinalizar(reserva.reserva_id)} >
                             <span className="material-symbols-outlined">
                                 no_crash
                             </span>

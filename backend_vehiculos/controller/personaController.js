@@ -12,7 +12,7 @@ var persona_db = require("model/persona.js");
 // -------------------------------------------------------- 
 // --rutas de escucha (endpoint) dispoibles para PERSONAS-- 
 // -------------------------------------------------------- 
-app.get('/', getAll);
+app.get('/', listar);
 app.post('/', crear);
 app.put('/:dni', actualizar);
 app.delete('/:dni', borrar);
@@ -28,8 +28,8 @@ app.get('/usuario/:dni', getUserByPersona);
 //req : es lo que llega desde el frontend (en nuestro caso Postman)
 //res : respuesta enviada desde el servidor al frontend
 
-function getAll(req, res) {
-    persona_db.getAll(function (err, resultado) {
+function listar(req, res) {
+    persona_db.listar(function (err, resultado) {
         if (err) {
             res.status(500).send(err);
         } else {

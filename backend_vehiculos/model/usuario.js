@@ -1,10 +1,10 @@
 require('rootpath')();
 const mysql = require('mysql');
-const configuracion = require("config.json");
+const config = require("config/config.json");
 const bcrypt = require('bcrypt');
 
 
-var connection = mysql.createConnection(configuracion.database);
+var connection = mysql.createConnection(config.database);
 connection.connect((err) => {
     if (err) {
         console.log(err);
@@ -26,9 +26,7 @@ funCallback: en una funcion que la enviamos desde el endpoint del controlador, e
 // C = CREATE
 // usuarioController --> app.post('/', createUser);
 usuario_db.create = function (usuario, funcallback) {
-    // req.body = usuario   ---> req.body.clave
     let claveCifrada = bcrypt.hashSync(usuario.clave, 10);
-
     consulta = "INSERT INTO usuario (mail, nickname, clave, persona_id) VALUES (?,?,?,?);";
     params = [usuario.mail, usuario.nickname, claveCifrada, usuario.persona];
     connection.query(consulta, params, (err, detail_bd) => {
@@ -70,8 +68,6 @@ usuario_db.getAll = function (funCallback) {
         }
     });
 }
-
-// -----------------------------------------------------------------------------
 
 //U = UPDATE
 // usuarioController --> app.put('/:id_usuario', updateUser);
@@ -135,7 +131,8 @@ usuario_db.borrar = function (id_usuario, funCallback) {
 
 //securityController --> app.post('/login', login);
 usuario_db.findByNickname = function (nickname, funCallback) {
-    var consulta = 'SELECT * FROM usuario WHERE nickname = ?';
+     //var consulta = 'SELECT * FROM usuario WHERE nickname = ?';   
+     var consulta = 'SELECT usuario.*, rol.nombre FROM usuario INNER JOIN rol ON usuario.rol_id = rol.rol_id AND usuario.nickname = ?';
     connection.query(consulta, nickname, function (err, result) {
         if (err) {
             funCallback(err);

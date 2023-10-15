@@ -6,20 +6,18 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-var db_vehiculo = require("model/vehiculo.js");
+var db_evento = require("model/evento.js");
 const auth = require("config/auth.js");
 
 
 // -------------------------------------------------------- 
 // --rutas de escucha (endpoint) dispoibles para PERSONAS-- 
 // -------------------------------------------------------- 
-app.get('/', listar); //R
-app.get('/:vehiculo_id', buscarPorVehiculoID);
 app.post('/', crear); //C
-app.put('/:vehiculo_id', actualizar); //U
-app.delete('/:vehiculo_id', borrar); //D 
-
-app.post('/fecha', nuevaFecha);
+app.get('/', listar); //R
+app.put('/:evento_id', actualizar); //U
+app.delete('/:evento_id', borrar); //D 
+app.get('/:evento_id', buscarPorEventoID);
 
 
 // -------------------------------------------------------- 
@@ -29,7 +27,7 @@ app.post('/fecha', nuevaFecha);
 // --- GET-------------------------------------------------- 
 
 function listar(req, res) {
-    db_vehiculo.listar(function (err, resultado) {
+    db_evento.listar(function (err, resultado) {
         if (err) {
             res.status(500).send(err);
         } else {
@@ -38,8 +36,8 @@ function listar(req, res) {
     });
 }
 
-function buscarPorVehiculoID(req, res) {
-    db_vehiculo.buscarPorVehiculoID(req.params.vehiculo_id, (err, result) => {
+function buscarPorEventoID(req, res) {
+    db_evento.buscarPorEventoID(req.params.evento_id, (err, result) => {
         if (err) {
             res.status(500).send(err);
         } else {
@@ -52,7 +50,7 @@ function buscarPorVehiculoID(req, res) {
 // --- POST ----------------------------------------------------- 
 
 function crear(req, res) {
-    db_vehiculo.crear(req.body, (err, resultado) => {
+    db_evento.crear(req.body, (err, resultado) => {
         if (err) {
             res.status(500).send(err);
         } else {
@@ -60,26 +58,12 @@ function crear(req, res) {
         }
     });
 }
-
-function nuevaFecha(req, res) {
-    db_vehiculo.crearFecha(req.body.fecha, (err, resultado) => {
-        if (err) {
-            res.status(500).send(err);
-        } else {
-            res.send(resultado);
-        }
-    });
-
-}
-
-
 
 
 // --- PUT ----------------------------------------------------- 
 
 function actualizar(req, res) {
-    let vehiculo_id = req.params.vehiculo_id;
-    db_vehiculo.actualizar(req.body, vehiculo_id, (err, resultado) => {
+    db_evento.actualizar(req.body, req.params.evento_id, (err, resultado) => {
         if (err) {
             res.status(500).send(err);
         } else {
@@ -91,8 +75,7 @@ function actualizar(req, res) {
 // --- DELETE ----------------------------------------------------- 
 
 function borrar(req, res) {
-    let vehiculo_id = req.params.vehiculo_id;
-    db_vehiculo.borrar(vehiculo_id, (err, result) => {
+    db_evento.borrar(req.params.evento_id, (err, result) => {
         if (err) {
             res.status(500).send(err);
         } else {

@@ -1,0 +1,15 @@
+{
+    "database": {
+        "host": "localhost",
+        "user": "root",
+        "password": "admin",
+        "database": "vehiculos_fio"
+    },
+    "server": {
+        "port": 8080
+    },
+    "auth": {
+        "accesKey": "q1w2e3r4_o0i9u8",
+        "refreshKey": "1t_6+'_A-c54s"
+    }
+}

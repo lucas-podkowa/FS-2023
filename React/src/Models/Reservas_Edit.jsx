@@ -14,41 +14,138 @@ export class Internal_Reservas_Edit extends Component {
         super(props)
 
         this.state = {
+            eventos: [],
             personas: [],
+            personasSeleccionadas: [],
+            vehiculos: [],
             vehiculo_id: null,
             evento_id: null,
             desde: new Date(),
-            hasta: null
+            hasta: null,
+            reservaSeleccionada: null
         }
+    }
+    //elemento utilizado en los mensajes, lo escribo una sola vez para no repetir todo en cada fetch
+    configTosti = {
+        position: "bottom-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
     }
 
     componentDidMount() {
 
-        //cargar los combos
-        // por cada grupo de elementos tengo que hacer un fetch
-        //this.setState({personas = result})
-    }
-    /*
-    let datos = 
-       {"datos" : {
-           "vehiculo_id" : 2, 
-           "evento_id" : 1, 
-           "desde": "2023-11-02", 
-           "hasta": "2023-11-04", 
-           "finalizada": false, 
-           "cancelada": false
-           },
-        "personas" : [1, 2]
+        this.fetchEventos();
+        this.fetchVehiculos();
+        this.fetchPersonas();
+        if (this.props.params.reserva_id) {
+            this.fetchReserva();
         }
+    }
 
-        1.	Cargar mis componentes (los select) utilizando sus respectivos Fetch (GET)
-2.	Fabricar los handler de modo que mi componente react tenga en su estado aquello que cargué en el formulario
-3.	Juntar los datos en una nueva variable que le permita enviar eso al backend
-4.	Tendrán un handlesubmit donde tendrán que hacer un fetch al backend pero ahora es un POST (ej: http://localhost:8080/reserva) y dentro de ese fetch, en el body irán los datos que hice en el paso anterior
+    fetchReserva() {
+        fetch(`http://localhost:8080/reserva/buscar/${this.props.params.reserva_id}`)
+            .then(res => {
+                return res.json()
+                    .then(body => {
+                        return {
+                            status: res.status,
+                            ok: res.ok,
+                            headers: res.headers,
+                            body: body
+                        };
+                    })
+            })
+            .then(
+                result => {
+                    if (result.ok) {
+                        this.setState({ reservaSeleccionada: result.body.detail });
+                    } else {
+                        toast.error(result.body.message, this.configTosti);
+                    }
+                }
+            )
+            .catch(error => console.error('Error en la primera petición:', error));
+    }
 
-    */
+    fetchEventos() {
+        fetch('http://localhost:8080/evento')
+            .then(res => {
+                return res.json()
+                    .then(body => {
+                        return {
+                            status: res.status,
+                            ok: res.ok,
+                            headers: res.headers,
+                            body: body
+                        };
+                    })
+            })
+            .then(
+                result => {
+                    if (result.ok) {
+                        this.setState({ eventos: result.body });
+                    } else {
+                        toast.error(result.body.message, this.configTosti);
+                    }
+                }
+            )
+            .catch(error => console.error('Error en la primera petición:', error));
+    }
 
+    fetchVehiculos() {
+        fetch('http://localhost:8080/vehiculo')
+            .then(res => {
+                return res.json()
+                    .then(body => {
+                        return {
+                            status: res.status,
+                            ok: res.ok,
+                            headers: res.headers,
+                            body: body
+                        };
+                    })
+            })
+            .then(
+                result => {
+                    if (result.ok) {
+                        this.setState({ vehiculos: result.body });
+                    } else {
+                        toast.error(result.body.message, this.configTosti);
+                    }
+                }
+            )
+            .catch(error => console.error('Error en la primera petición:', error));
+    }
 
+    fetchPersonas() {
+        fetch('http://localhost:8080/persona')
+            .then(res => {
+                return res.json()
+                    .then(body => {
+                        return {
+                            status: res.status,
+                            ok: res.ok,
+                            headers: res.headers,
+                            body: body
+                        };
+                    })
+            })
+            .then(
+                result => {
+                    if (result.ok) {
+                        this.setState({ personas: result.body });
+                    } else {
+                        toast.error(result.body.message, this.configTosti);
+                    }
+                }
+            )
+            .catch(error => console.error('Error en la primera petición:', error));
+    }
 
 
 
@@ -58,19 +155,23 @@ export class Internal_Reservas_Edit extends Component {
 
         let reserva = {
             datos: {
-                vehiculo_id: this.state.coche,
-                evento_id: this.tate.evento,
+                vehiculo_id: this.state.vehiculo_id,
+                evento_id: this.state.evento_id,
+                desde: this.state.desde,
+                hasta: this.state.hasta,
             },
-            personas: this.state.personas
+            personas: this.state.personasSeleccionadas
         }
         let parametros = {
-            method: this.props.params.vehiculo_id ? 'PUT' : 'POST',
+            method: this.props.params.reserva_id ? 'PUT' : 'POST',
             body: JSON.stringify(reserva),
             headers: {
                 'Content-Type': 'application/json',
             }
         }
-        const url = this.props.params.vehiculo_id ? `http://localhost:8080/vehiculo/${this.props.params.vehiculo_id}` : "http://localhost:8080/vehiculo"
+        const url = this.props.params.reserva_id
+            ? `http://localhost:8080/reserva/${this.props.params.reserva_id}`
+            : "http://localhost:8080/reserva"
         fetch(url, parametros)
             .then(res => {
                 return res.json()
@@ -85,48 +186,25 @@ export class Internal_Reservas_Edit extends Component {
             }).then(
                 result => {
                     if (result.ok) {
-                        toast.success(result.body.message, {
-                            position: "bottom-center",
-                            autoClose: 5000,
-                            hideProgressBar: false,
-                            closeOnClick: true,
-                            pauseOnHover: true,
-                            draggable: true,
-                            progress: undefined,
-                            theme: "light",
-                        });
-                        this.props.navigate("/vehiculos")
+                        toast.success(result.body.message, this.configTosti);
+                        this.props.navigate("/reservas")
                     } else {
-                        toast.error(result.body.message, {
-                            position: "bottom-center",
-                            autoClose: 5000,
-                            hideProgressBar: false,
-                            closeOnClick: true,
-                            pauseOnHover: true,
-                            draggable: true,
-                            progress: undefined,
-                            theme: "light",
-                        });
+                        toast.error(result.body.message, this.configTosti);
                     }
                 }
-
-
             ).catch(
                 (error) => { console.log(error) }
             );
-
-
     }
 
     handleChangePersonas = (selectedOption) => {
-        this.setState({ personas: selectedOption });
+        this.setState({ personasSeleccionadas: selectedOption });
     }
-
     handleChangeEvento = (selectedOption) => {
-        this.setState({ evento_id: selectedOption });
+        this.setState({ evento_id: selectedOption.value });
     }
     handleChangeVehiculo = (selectedOption) => {
-        this.setState({ vehiculo_id: selectedOption });
+        this.setState({ vehiculo_id: selectedOption.value });
     }
     handleChangeDesde = (fechaSeleccionada) => {
         this.setState({ desde: fechaSeleccionada });
@@ -139,21 +217,53 @@ export class Internal_Reservas_Edit extends Component {
     //     this.setState({ [event.target.name]: event.target.value });
     // }
 
+
     render() {
-        const personas = [
-            { value: '1', label: 'Lucas' },
-            { value: '2', label: 'Pepe' }
-        ]
-        const eventos = [
-            { value: '1', label: 'Acto fin de Clases' },
-            { value: '2', label: 'Entrega Certificados' }
-        ]
-        const coches = [
-            { value: '1', label: 'Focus' },
-            { value: '2', label: 'Ranger' }
-        ]
+        //--- con los datos optenidos por los fetch, armamos los arreglos para cargar los select ---
+        //------------------------------------------------------------------------------------------
+
+        // --> se puede hacer con un if con un forOf o...
+        // var coches = [];
+        // if (this.state.vehiculos.length > 0) {
+        //     for (const vehiculo of this.state.vehiculos) {
+        //         coches.push({ value: vehiculo.vehiculo_id, label: vehiculo.vehiculo_desc });
+        //     }
+        // }
+
+        // --> utilizando map:
+
+        const vehiculos = this.state.vehiculos || [];
+        const coches = vehiculos.map(vehiculo => ({
+            value: vehiculo.vehiculo_id,
+            label: vehiculo.vehiculo_desc
+        }));
+
+        const evts = this.state.eventos || [];
+        const eventos = evts.map(evento => ({
+            value: evento.evento_id,
+            label: `${evento.nombre} (${evento.lugar})`
+        }));
+
+        const pers = this.state.personas || [];
+        const personas = pers.map(persona => ({
+            value: persona.persona_id,
+            label: `${persona.apellido} ${persona.nombre}`
+        }));
+
+        // var sel = {}
+        // if (this.state.reservaSeleccionada !== "" && this.state.reservaSeleccionada !== null) {
+        //     if (this.state.eventos !== "" && this.state.eventos !== null) {
+        //         let evt = this.state.eventos.filter(evento => evento.evento_id === this.state.reservaSeleccionada.evento_id);
+        //         sel = { "value": this.state.reservaSeleccionada.evento_id, "label": evt[0].nombre }
+        //     }
+        // }
+
+        //------------------------------------------------------------------------------------------
+        //------------------------------------------------------------------------------------------
+
         const espacio = <>&nbsp;</>;
         return (
+
             <div className='container'>
                 <form action="" onSubmit={this.handleSubmit}>
                     <label htmlFor="evento">Evento</label>
@@ -167,6 +277,7 @@ export class Internal_Reservas_Edit extends Component {
                         components={animado}
                         onChange={this.handleChangeEvento}
                     ></Select>
+
                     <br />
                     <label htmlFor="vehiculo">Vehículo</label>
                     <Select
@@ -221,10 +332,9 @@ export class Internal_Reservas_Edit extends Component {
                         type="submit"
                         value="Guardar"
                     />
-
                 </form>
 
-            </div>
+            </div >
         )
     }
 }
